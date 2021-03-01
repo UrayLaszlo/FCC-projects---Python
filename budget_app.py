@@ -7,11 +7,10 @@ class Category:
         self.ledger.append({"amount": amount, "description": description})
 
     def withdraw(self, amount, description = ''):
-        if self.check_funds:
+        if self.check_funds(amount):
             self.ledger.append({"amount": -amount, "description": description})
             return True
-        else:
-            return False
+        return False
 
     def get_balance(self):
         balance = 0
@@ -24,15 +23,15 @@ class Category:
 
     def transfer(self, amount, budget_category):
         if self.check_funds(amount):
-            self.withdraw(amount, f"Transfer to {budget_category}")
-            budget_category.deposit(amount, f"Transfer from {self}")
+            self.withdraw(amount, f"Transfer to {budget_category.name}")
+            budget_category.deposit(amount, f"Transfer from {self.name}")
             return True
         else:
             return False
 
     def __str__(self):
         name = self.name 
-        display = name.center(30,"*") 
+        display = name.center(30,"*") + "\n"
         for x in self.ledger:
             try:
                 left = x['description'][0:23]
@@ -50,7 +49,7 @@ def create_spend_chart(categories):
     s = 0 
     for j in i.ledger:
       if j['amount'] < 0 :
-        s+= abs(j['amount'])
+        s += abs(j['amount'])
     spent_dict[i.name] = round(s,2)
   total = sum(spent_dict.values())
   percent_dict = {}
@@ -84,7 +83,7 @@ def create_spend_chart(categories):
 
 food = Category("Food")
 food.deposit(1000, "initial deposit")
-food.withdraw(10.15, "groceries")
+food.withdraw(1100.10, "groceries")
 food.withdraw(15.89, "restaurant and more food for dessert")
 print(food.get_balance())
 clothing = Category("Clothing")
