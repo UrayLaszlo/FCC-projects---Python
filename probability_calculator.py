@@ -28,21 +28,35 @@ class Hat:
         return rand_draw_list
     
 def experiment(hat, expected_balls, num_balls_drawn, num_experiments):
+    '''
     list_expected_balls = [[k]*v for k,v in expected_balls.items()] # Add incoming dictionary to list
     list_expected_balls = [x for y in list_expected_balls for x in y] # Turn list of lists to list
-    count = 0
 
     for i in range(num_experiments):
         copy_of_hat = copy.deepcopy(hat)
         drawn_list = copy_of_hat.draw(num_balls_drawn)
-        if drawn_list == list_expected_balls:
+        if drawn_list in list_expected_balls:
             count += 1
     
     return count/num_experiments
+    '''
+    count = 0
 
-hat1 = Hat(yellow=3, blue=2, green=4)
-#hat1.draw(5)
-experiment(hat=Hat, expected_balls={"blue":2,"green":1}, num_balls_drawn=4, num_experiments=1000)#hat2 = Hat(red=5, orange=4)
+    for x in range(num_experiments):
+      copy_of_hat = copy.deepcopy(hat)
+      drawn_list = copy_of_hat.draw(num_balls_drawn)
+      success = True
+      for k, v in expected_balls.items():
+        if drawn_list.count(k) < v:
+          success = False
+          break
+      if success:
+        count += 1
+
+    return count / num_experiments
+
+experiment(Hat, {"blue":2,"green":1}, 4, 1000)#hat2 = Hat(red=5, orange=4)
+#hat = Hat(yellow=3, blue=2, green=4)
 #hat2.draw(5)
 #hat3 = Hat(red=5, orange=4, black=1, blue=0, pink=2, striped=9)
 #hat3.draw(7)
